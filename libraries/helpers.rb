@@ -187,7 +187,7 @@ module MysqlCookbook
       sql_escaped_password = root_password.gsub('\\') { '\\\\' }.gsub("'") { '\\\'' }
 	    
       cmd = "UPDATE mysql.user SET #{password_column_name}=PASSWORD('#{sql_escaped_password}')#{password_expired} WHERE user = 'root';"
-      cmd = "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{sql_escaped_password}';" if v57plus
+      cmd = "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '#{sql_escaped_password}';" if v57plus
       
       <<-EOS
         set -e
