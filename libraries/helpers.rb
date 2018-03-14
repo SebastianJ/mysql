@@ -82,7 +82,11 @@ module MysqlCookbook
     end
 
     def mysql_name
+      if instance == 'default'
+      "mysql"
+      else
       "mysql-#{instance}"
+      end 
     end
 
     def default_socket_file
@@ -178,12 +182,13 @@ module MysqlCookbook
     def lc_messages_dir; end
 
     def init_records_script
-      
       # Note: shell-escaping passwords in a SQL file may cause corruption - eg
       # mysql will read \& as &, but \% as \%. Just escape bare-minimum \ and '
       sql_escaped_password = root_password.gsub('\\') { '\\\\' }.gsub("'") { '\\\'' }
-	  cmd = "UPDATE mysql.user SET #{password_column_name}=PASSWORD('#{sql_escaped_password}')#{password_expired} WHERE user = 'root';"
+	    
+      cmd = "UPDATE mysql.user SET #{password_column_name}=PASSWORD('#{sql_escaped_password}')#{password_expired} WHERE user = 'root';"
       cmd = "ALTER USER 'root'@'localhost' IDENTIFIED BY '#{sql_escaped_password}';" if v57plus
+      
       <<-EOS
         set -e
         rm -rf /tmp/#{mysql_name}
@@ -259,6 +264,11 @@ EOSQL
       return '/usr/libexec/mysqld' if node['platform_family'] == 'fedora'
       return 'mysqld' if scl_package?
       "#{prefix_dir}/usr/sbin/mysqld"
+    end
+    
+    def mysql_systemd
+      return "/usr/share/mysql/mysql-systemd-start" if v57plus
+      "/usr/libexec/#{mysql_name}-wait-ready $MAINPID"
     end
 
     def mysqld_initialize_cmd
