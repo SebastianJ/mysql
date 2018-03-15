@@ -48,7 +48,9 @@ module MysqlCookbook
           config: new_resource,
           etc_dir: etc_dir,
           base_dir: base_dir,
-          mysqld_bin: mysqld_bin
+          mysqld_bin: mysqld_bin,
+          mysqld_systemd_pre: mysqld_systemd("pre")
+          mysqld_systemd_post: mysqld_systemd("post")
         )
         cookbook 'mysql'
         notifies :run, "execute[#{instance} systemctl daemon-reload]", :immediately

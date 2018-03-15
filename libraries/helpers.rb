@@ -266,8 +266,8 @@ EOSQL
       "#{prefix_dir}/usr/sbin/mysqld"
     end
     
-    def mysql_systemd
-      return "/usr/share/mysql/mysql-systemd-start" if v57plus
+    def mysqld_systemd(action = "post")
+      return "/usr/share/mysql/mysql-systemd-start #{action}" if v57plus
       "/usr/libexec/#{mysql_name}-wait-ready $MAINPID"
     end
 
