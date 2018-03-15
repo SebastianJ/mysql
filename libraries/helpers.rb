@@ -83,9 +83,9 @@ module MysqlCookbook
 
     def mysql_name
       if instance == 'default'
-      "mysql"
+        "mysql"
       else
-      "mysql-#{instance}"
+        "mysql-#{instance}"
       end 
     end
 
