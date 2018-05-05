@@ -37,6 +37,11 @@ module MysqlCookbook
       return true if node['platform'] == 'ubuntu' && node['platform_version'] == '16.04'
       false
     end
+    
+    def bionic?
+      return true if node['platform'] == 'ubuntu' && node['platform_version'] == '18.04'
+      false
+    end
 
     def defaults_file
       "#{etc_dir}/my.cnf"
@@ -70,6 +75,7 @@ module MysqlCookbook
       return '5.5' if precise?
       return '5.5' if trusty?
       return '5.7' if xenial?
+      return '5.7' if bionic?
 
       # misc
       return '5.6' if node['platform'] == 'freebsd'
