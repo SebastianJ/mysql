@@ -273,8 +273,12 @@ EOSQL
     end
     
     def mysqld_systemd(action = "post")
-      return "/usr/share/mysql/mysql-systemd-start #{action}" if v57plus
-      "/usr/libexec/#{mysql_name}-wait-ready $MAINPID"
+      return case action
+        when "pre"
+          "/usr/share/mysql/mysql-systemd-start pre"
+        when "post"
+          "/usr/libexec/#{mysql_name}-wait-ready $MAINPID"
+      end
     end
 
     def mysqld_initialize_cmd
