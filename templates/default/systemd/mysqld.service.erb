@@ -8,9 +8,10 @@ Type=simple
 User=<%= @config.run_user %>
 Group=<%= @config.run_group %>
 PermissionsStartOnly=true
-ExecStartPre=<%= @mysqld_systemd_pre %>
+ExecStartPre=<%= @mysql_systemd_start_pre %>
+
 ExecStart=<%= @mysqld_bin %> --defaults-file=<%= @etc_dir %>/my.cnf --basedir=<%= @base_dir %>
-ExecStartPost=<%= @mysqld_systemd_post %>
+ExecStartPost=<%= @mysql_systemd %>
 TimeoutSec=300
 Restart=on-failure
 RuntimeDirectory=mysqld
