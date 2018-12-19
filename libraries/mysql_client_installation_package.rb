@@ -15,7 +15,7 @@ module MysqlCookbook
 
     # Actions
     action :create do
-      package package_name do
+      package new_resource.package_name do
         version package_version if package_version
         options package_options if package_options
         action :install
@@ -23,7 +23,7 @@ module MysqlCookbook
     end
 
     action :delete do
-      package package_name do
+      package new_resource.package_name do
         action :remove
       end
     end

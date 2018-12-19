@@ -49,16 +49,16 @@ module MysqlCookbook
           etc_dir: etc_dir,
           base_dir: base_dir,
           mysqld_bin: mysqld_bin,
-          mysqld_systemd_pre: mysqld_systemd("pre"),
-          mysqld_systemd_post: mysqld_systemd("post")
+          mysql_systemd_start_pre: mysql_systemd_start_pre,
+          mysql_systemd: mysql_systemd
         )
         cookbook 'mysql'
-        notifies :run, "execute[#{instance} systemctl daemon-reload]", :immediately
+        notifies :run, "execute[#{new_resource.instance} systemctl daemon-reload]", :immediately
         action :create
       end
 
       # avoid 'Unit file changed on disk' warning
-      execute "#{instance} systemctl daemon-reload" do
+      execute "#{new_resource.instance} systemctl daemon-reload" do
         command '/bin/systemctl daemon-reload'
         action :nothing
       end
@@ -72,8 +72,8 @@ module MysqlCookbook
         mode '0644'
         variables(
           run_dir: run_dir,
-          run_user: run_user,
-          run_group: run_group
+          run_user: new_resource.run_user,
+          run_group: new_resource.run_group
         )
         cookbook 'mysql'
         action :create
@@ -118,7 +118,7 @@ module MysqlCookbook
       end
     end
 
-    declare_action_class.class_eval do
+    action_class do
       def stop_system_service
         # service management resource
         service 'mysql' do
